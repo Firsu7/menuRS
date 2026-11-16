@@ -10,7 +10,7 @@ struct Pos { x:i32, y:i32, z:i32 }
 #[derive(Clone, Debug)]
 struct State { open:bool, enabled:bool, start:Option<Pos>, end:Option<Pos>, mode:MiningMode, movement:MovementMode, route:Vec<Pos>, cursor:usize }
 impl Default for State { fn default()->Self { Self{open:false,enabled:false,start:None,end:None,mode:MiningMode::default(),movement:MovementMode::default(),route:Vec::new(),cursor:0} } }
-static STATE:std::sync::Mutex<Option<State>>=std::sync::Mutex::new(None);
+static STATE:std::sync::Mutex<Option<State>>=std::sync::Mutex::new(Some(State{open:false,enabled:false,start:None,end:None,mode:MiningMode::ThreeByOne,movement:MovementMode::Mixed,route:Vec::new(),cursor:0}));
 fn state()->std::sync::MutexGuard<'static,Option<State>>{ STATE.lock().unwrap_or_else(std::sync::PoisonError::into_inner) }
 impl State {
  fn rebuild(&mut self){
