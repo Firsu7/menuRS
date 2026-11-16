@@ -14,7 +14,7 @@ source = "runtime.rs"
 [[injection]]
 id = "insert"
 kind = "HEAD"
-target = "horizon_client::game::interface::play_input::Game::mapped_key"
+target = "horizon_client::game::play_input::Game<'_>::mapped_key"
 helper = "insert.rs"
 bindings = [
   { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
@@ -26,7 +26,7 @@ bindings = [
 [[injection]]
 id = "level-tick"
 kind = "HEAD"
-target = "horizon_client::game::native_hooks::Game::native_level_tick_pre"
+target = "horizon_client::game::native_hooks::base::Game<'_>::native_level_tick_pre"
 helper = "level_tick.rs"
 bindings = [
   { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
