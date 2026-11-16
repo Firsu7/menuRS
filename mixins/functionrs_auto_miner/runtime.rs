@@ -66,5 +66,42 @@ impl crate::game::Game<'_> {
   if self.world.loaded(target.x,target.z){let before=self.world.block(target.x,target.y,target.z);if !self.world.is_air(before){let _=self.break_block_as_player([target.x,target.y,target.z]);}}
   let mut g=state();let s=g.as_mut().unwrap();s.cursor+=1;if s.cursor>=s.route.len(){s.enabled=false;self.system_message(horizon_client::text::Text::literal("Auto Miner: FINISHED"));}
  }
- fn functionrs_move(&mut self,target:Pos){let movement={let g=state();g.as_ref().unwrap().movement};let Some(p)=self.player.as_mut()else{return;};let dx=f64::from(target.x)+0.5-p.position.x;let dz=f64::from(target.z)+0.5-p.position.z;if dx.abs()+dz.abs()<0.01{return;}p.yaw=(-(dx.atan2(dz)).to_degrees())as f32;p.head_yaw=p.yaw;let jump=matches!(movement,MovementMode::SprintJump);let _=self.motion.player_movement_tick([0.0,1.0],jump);if matches!(movement,MovementMode::Sprint|MovementMode::SprintJump){let _=self.motion.sprint_input_tick(horizon_client::sprint::Keys{forward:true,sprint:true,jump,..Default::default()});}}
+ fn functionrs_move(&mut self, target: Pos) {
+  let movement = { let g = state(); g.as_ref().unwrap().movement };
+  let Some(player) = self.player.as_mut() else { return; };
+  let dx = f64::from(target.x) + 0.5 - player.position.x;
+  let dz = f64::from(target.z) + 0.5 - player.position.z;
+  if dx.abs() + dz.abs() < 0.01 { return; }
+
+  player.yaw = (-(dx.atan2(dz)).to_degrees()) as f32;
+  player.head_yaw = player.yaw;
+
+  let jump = matches!(movement, MovementMode::SprintJump);
+  // Sprint decisions belong to PlayerMotion, not MotionResources.
+  let sprint = matches!(movement, MovementMode::Sprint | MovementMode::SprintJump);
+  let keys = horizon_client::sprint::Keys {
+   forward: true,
+   sprint,
+   jump,
+   ..Default::default()
+  };
+  let _ = player.sprint_input_tick(keys);
+
+  // The collision-aware player movement API is a MotionWorld operation.
+  let entities: [horizon_core::geometry::Aabb; 0] = [];
+  let mut motion_world = horizon_client::motion::MotionWorld {
+   entities: &entities,
+   player,
+   scene: &mut self.world,
+   assets: &self.pack.assets,
+   collision_binding: self.collision,
+   resources: self.motion,
+   health: &self.health_resources,
+   loop_context: &self.loop_context,
+   damage_hooks: &self.damage_hooks,
+   tag_items: None,
+   block_registries: Some(&self.pack.block_registries),
+  };
+  let _ = motion_world.player_movement_tick([0.0, 1.0], jump);
+ }
 }
