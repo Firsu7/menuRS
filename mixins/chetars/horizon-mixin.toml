@@ -1,0 +1,70 @@
+[mod]
+id = "chetars_spatial_gui"
+version = "0.5.5"
+priority = 100
+
+[compatibility]
+horizon_revision = "9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "chetars_spatial_gui"
+source = "runtime.rs"
+
+[[injection]]
+id = "open-key"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_key"
+helper = "open_key.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "&str", value = "key" },
+  { name = "pressed", ty = "bool", value = "pressed" }
+]
+
+[[injection]]
+id = "render"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_gui_render_post"
+helper = "render.rs"
+bindings = [
+  { name = "game", ty = "&crate::game::Game<'_>", value = "self" },
+  { name = "batch", ty = "&mut HudBatch", value = "batch" },
+  { name = "gui_hidden", ty = "bool", value = "gui_hidden" },
+  { name = "focused", ty = "bool", value = "focused" }
+]
+
+[[injection]]
+id = "world-menu"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_world_submit"
+helper = "world_submit.rs"
+bindings = [
+  { name = "game", ty = "&crate::game::Game<'_>", value = "self" },
+  { name = "draw", ty = "&mut NativeWorldDraw", value = "draw" }
+]
+
+[[injection]]
+id = "mouse-button"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_mouse_button_pre"
+helper = "mouse_button.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "button", ty = "i32", value = "button" },
+  { name = "pressed", ty = "bool", value = "pressed" },
+  { name = "modifiers", ty = "u32", value = "modifiers" },
+  { name = "canceled", ty = "&mut bool", value = "canceled" }
+]
+
+[[injection]]
+id = "wheel"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_wheel"
+helper = "wheel.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "steps", ty = "f32", value = "steps" },
+  { name = "claimed", ty = "&mut bool", value = "claimed" }
+]
