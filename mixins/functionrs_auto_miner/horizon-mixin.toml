@@ -31,4 +31,4 @@ helper = "level_tick.rs"
 bindings = [
   { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
   { name = "level", ty = "horizon_client::game::native_hooks::LevelRef", value = "level" },
-] 
+]
