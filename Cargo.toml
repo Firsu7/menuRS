@@ -1,0 +1,13 @@
+[package]
+name = "chetars-spatial-gui"
+version = "0.5.5"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "A multi-panel 2D/3D spatial GUI for Horizon Nightly 2026-11-13"
+
+[lib]
+path = "mixins/chetars/runtime.rs"
+
+[workspace]
+resolver = "2"
