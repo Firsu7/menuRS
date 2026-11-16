@@ -97,10 +97,6 @@ impl crate::game::Game<'_> {
    collision_binding: self.collision,
    resources: self.motion,
    health: &self.health_resources,
-   loop_context: &self.loop_context,
-   damage_hooks: &self.damage_hooks,
-   tag_items: None,
-   block_registries: Some(&self.pack.block_registries),
   };
   let _ = motion_world.player_movement_tick([0.0, 1.0], jump);
  }
