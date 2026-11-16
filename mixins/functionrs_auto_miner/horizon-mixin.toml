@@ -26,9 +26,9 @@ bindings = [
 [[injection]]
 id = "level-tick"
 kind = "HEAD"
-target = "horizon_client::game::native_hooks::base::Game<'_>::native_level_tick_pre"
+target = "horizon_client::game::Game<'_>::tick_world"
 helper = "level_tick.rs"
 bindings = [
   { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
-  { name = "level", ty = "horizon_client::game::native_hooks::LevelRef", value = "level" },
+  { name = "running", ty = "bool", value = "running" },
 ]
